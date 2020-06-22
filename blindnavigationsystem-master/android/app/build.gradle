@@ -144,14 +144,15 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 dependencies {
-    //compile "com.google.android.gms:play-services-location:17.0.0"
-    compile project(':react-native-geolocation-service')
+    implementation project(':react-native-sqlite-2')
+    implementation project(':react-native-geolocation-service')
+    implementation project(':react-native-reanimated')
     implementation project(':react-native-sensors')
     implementation project(':react-native-tts')
     implementation project(':react-native-voice')
     implementation project(':react-native-screens')
-    implementation project(':react-native-reanimated')
     implementation project(':react-native-gesture-handler')
+    //compile "com.google.android.gms:play-services-location:17.0.0"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules

@@ -9,12 +9,14 @@ import {
   Button,
   Image,
   AppRegistry,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 import Voice from 'react-native-voice';
 
 import playImage from '../../Assets/play.png'
 import pauseImage from '../../Assets/pause.png'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 
@@ -33,6 +35,7 @@ export default class VoiceNative extends React.Component {
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
+
   }
   
   
@@ -50,12 +53,14 @@ onSpeechRecognized(e) {
     });
   };
  onSpeechEnd(e) {
+  
     this.setState({
       End: '√',
 	  active: false
     });
   };
 onSpeechResults(e) {
+  //this.splitTheWords(e.value[0])
     this.setState({
       results: e.value[0],
     });
@@ -65,11 +70,80 @@ onSpeechResults(e) {
    //Tts.addEventListener('tts-start', (event) => Tts.speak("taking you to " + String(this.state.x), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } }));
 	});
 	console.log(e.value[0])
-	}
+  }
+  
+
+  splitTheWords=(val)=>
+  {
+    let arr=val.split(" ");
+    //alert(arr)
+    
+ 
+  let keymap=new Map();
+
+
+for(let i=0;i<arr.length;i++)
+{
+  let key=arr[i];
+  if(arr[i]=="name"||arr[i]=="ID"||arr[i]=="mobile"||arr[i]=="sub-centre"||arr[i]=="subCentre")
+  {
+    keymap.set(arr[i],"");
+    let temp;
+    for(let j=i+1;j<arr.length;j++){
+      if(arr[j]=="name"||arr[j]=="ID"||arr[j]=="mobile"||arr[j]=="sub-centre"||arr[i]=="subCentre")
+      {
+
+        keymap.set(arr[i],temp)
+                   break;
+
+      }
+      else if(j==arr.length-1)
+      {        temp=temp+arr[j];
+
+        keymap.set(arr[i],temp)
+
+      }
+      else{
+        temp=temp+arr[j];
+
+      }
+
+      
+    }
+
+
+  }
+}
+
+let name=keymap.get("name")
+if(name)
+name=keymap.get("name").split("undefined")[1];
+
+let id=keymap.get("ID")
+if(id)
+id=keymap.get("ID").split("undefined")[1];
+
+let mobile=keymap.get("mobile")
+if(mobile)
+mobile=keymap.get("mobile").split("undefined")[1];
+
+let sc=keymap.get("subCentre") 
+if(sc)
+sc=keymap.get("subCentre").split("undefined")[1];
+
+
+alert(name+"     "+id+"   "+mobile+"    "+sc)
+
+
+
+
+
+}
   
   
 
   async _startRecognition(e) {
+    console.log("start button pressed")
     this.setState({
       recognized: '',
       started: '',
@@ -84,6 +158,7 @@ onSpeechResults(e) {
   }
  
 async  _stopRecognizing(e){
+  console.log("stop button pressed")
 	  this.setState({
 	  active: false,
     });
@@ -94,13 +169,20 @@ async  _stopRecognizing(e){
       console.error(e);
     }
   };
+  // testing=()=>{
+  //   Tts.speak("Hello")
+  // }
 
 
 render () {
     return (
       <View  style={styles.MainContainer}>
+  
 	<TouchableHighlight onPress={
-	this.state.active ?  this._stopRecognizing.bind(this) : this._startRecognition.bind(this)}>
+ this.state.active ?  this._stopRecognizing.bind(this) : this._startRecognition.bind(this)
+
+}>
+
 	
 	<Image source={this.state.active ? pauseImage : playImage} />
     </TouchableHighlight>
@@ -111,13 +193,13 @@ render () {
 const styles = StyleSheet.create({
 
   MainContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems : 'center',
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems : 'center',
 
   },
   imageStyle : {
-	width: null,
-    height: null,
+	width: 100,
+    height: 100,
   }
 });

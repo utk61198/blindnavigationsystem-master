@@ -141,6 +141,12 @@ export default class Location extends Component{
     await this.getLocation();
   }
 
+
+
+
+  
+
+
   render(){
     return(null);
   }

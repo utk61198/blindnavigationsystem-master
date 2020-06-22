@@ -10,6 +10,9 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.6",
     "expo": "~36.0.0",
+    "pouchdb": "^7.2.1",
+    "pouchdb-adapter-react-native-sqlite": "^2.0.0",
+    "pouchdb-react-native": "^6.4.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "~0.61.4",
@@ -20,6 +23,7 @@
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.0.0-alpha.12",
     "react-native-sensors": "^5.3.3",
+    "react-native-sqlite-2": "3.0.1",
     "react-native-tts": "^3.1.1",
     "react-native-unimodules": "~0.7.0",
     "react-native-voice": "^0.3.0",

@@ -3,18 +3,19 @@ package com.awesomeproject;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import dog.craftz.sqlite_2.RNSqlite2Package;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
 import com.sensors.RNSensorsPackage;
 import net.no_mad.tts.TextToSpeechPackage;
 import com.wenkesj.voice.VoicePackage;
+import com.swmansion.rnscreens.RNScreensPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.awesomeproject.generated.BasePackageList;
-import com.swmansion.reanimated.ReanimatedPackage;
-import com.swmansion.rnscreens.RNScreensPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
@@ -44,13 +45,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSqlite2Package(),
+            new RNFusedLocationPackage(),
+            new ReanimatedPackage(),
             new RNSensorsPackage(),
             new TextToSpeechPackage(),
             new VoicePackage(),
-          new ReanimatedPackage(),
-          new RNGestureHandlerPackage(),
-          new RNScreensPackage(),
-          new RNFusedLocationPackage(),
+            new RNScreensPackage(),
+            new RNGestureHandlerPackage(),
           new ModuleRegistryAdapter(mModuleRegistryProvider)
       );
     }
