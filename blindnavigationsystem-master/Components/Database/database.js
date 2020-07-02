@@ -1,41 +1,35 @@
 import React, { Component } from 'react';
 import { View,Text,
 StyleSheet,Button} from 'react-native';
-import { TouchableOpacity, RawButton } from 'react-native-gesture-handler';
-
-
 import PouchDB from 'pouchdb-react-native'
-
 import SQLite from 'react-native-sqlite-2'
 import SQLiteAdapterFactory from 'pouchdb-adapter-react-native-sqlite'
+import {address} from './constants'
+
+
 
 export default class GetButton extends Component{
-
 constructor(props)
 {super(props)
    this.state={
         positions:[],
     }
-this.getdata=this.getdata.bind(this)
 
-
-
-
-
-
-
-
-
+    this.getdata=this.getdata.bind(this);
+    this.seedata=this.seedata.bind(this)
 
 
 }
+
+
 
 getdata=()=>
 {
   const SQLiteAdapter = SQLiteAdapterFactory(SQLite)
   PouchDB.plugin(SQLiteAdapter)
+
   
-const rdbaddress=`http://admin:admin@192.168.1.9:5984/position`
+const rdbaddress={address}.address
 const dbadress='mydb.db'
 
 const rdb=new PouchDB(rdbaddress);
@@ -43,9 +37,9 @@ const db=new PouchDB(dbadress,{adpater:'react-native-sqlite'});
 
 
 // rdb.put({
-//     _id:'G1',
-//     latitude:40.714,
-//     longitude:74.006
+//     _id:'H1',
+//     latitude:123,
+//     longitude:123,
 
 //   }).then(function (response) {
 //     alert("worked")
@@ -55,6 +49,8 @@ const db=new PouchDB(dbadress,{adpater:'react-native-sqlite'});
 //   });
 let position_array=[]
 let temp="";
+
+
 rdb.allDocs({include_docs: true}, (err, docs)=> {
     if (err) {
        return console.log(err);
@@ -79,35 +75,29 @@ rdb.allDocs({include_docs: true}, (err, docs)=> {
 
       })
 
-     // alert(this.state.positions[0].position)
 
       
     }
  });
-
-
-
-
-
-
 }
 
 seedata=()=>{
 
+  let display=''
+  for(let i=0;i<this.state.positions.length;i++)
+  {
+    display=display+this.state.positions[i].position+" "+
+    this.state.positions[i].latitude+" "+this.state.positions[i].longitude+
+"\n"
 
-alert(this.state.positions[0].position+" "+this.state.positions[0].latitude+" "+this.state.positions[0].longitude)
-
-
+  }
+alert(display)
 }
-
-
-
-
-    render()
+render()
     {
        return(
 <View>
-<View style={styles.container}>
+<View style={styles.container} >
 
 <Button title="Fetch data" onPress={()=>this.getdata()} style={styles.getbutton} >
  
@@ -158,7 +148,7 @@ const styles=StyleSheet.create(
           backgroundColor:'cyan',
           alignItems:'center',
           justifyContent:'center',
-          paddingTop:20,
+        
           
 
        

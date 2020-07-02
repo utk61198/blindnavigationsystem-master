@@ -1,7 +1,10 @@
-// App.js
-import React from 'react';
+import "react-native-gesture-handler";
+import React from "react";
+import { debounce } from "lodash";
+import ShortestPath from "../../shortestpath"
 
-import Tts from 'react-native-tts';
+
+import Tts from "react-native-tts";
 import {
   StyleSheet,
   Text,
@@ -10,196 +13,165 @@ import {
   Image,
   AppRegistry,
   TouchableHighlight,
-  TouchableOpacity
-} from 'react-native';
-import Voice from 'react-native-voice';
+  TouchableOpacity,
+  ImageBackground
+} from "react-native";
+import Voice from "react-native-voice";
 
-import playImage from '../../Assets/play.png'
-import pauseImage from '../../Assets/pause.png'
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import playImage from "../../Assets/play.png";
+import pauseImage from "../../Assets/pause.png";
 
-
+import { data } from "./data";
 
 export default class VoiceNative extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      recognized: '',
-      started: '',
+      recognized: "",
+      started: "",
       results: [],
-	  active : false,
-	  currentImage: './play.png',
-    End: ''
+      start:"S2",
+      end:"S1",
+
+      active: false,
+      currentImage: "./play.png",
+      End: ""
     };
-	  Voice.onSpeechStart = this.onSpeechStart.bind(this);
+
+    Voice.onSpeechStart = this.onSpeechStart.bind(this);
     Voice.onSpeechRecognized = this.onSpeechRecognized.bind(this);
     Voice.onSpeechResults = this.onSpeechResults.bind(this);
     Voice.onSpeechEnd = this.onSpeechEnd.bind(this);
-
   }
-  
-  
-componentWillUnmount() {
+
+  componentWillUnmount() {
     Voice.destroy().then(Voice.removeAllListeners);
   }
-onSpeechStart(e) {
+
+  onSpeechStart = e => {
     this.setState({
-      started: '√',
+      started: "√"
     });
   };
-onSpeechRecognized(e) {
+
+  onSpeechRecognized(e) {
     this.setState({
-      recognized: '√',
+      recognized: "√"
     });
-  };
- onSpeechEnd(e) {
-  
+  }
+  onSpeechEnd(e) {
     this.setState({
-      End: '√',
-	  active: false
+      End: "√",
+      active: false
     });
-  };
-onSpeechResults(e) {
-  //this.splitTheWords(e.value[0])
+  }
+  onSpeechResults = debounce(e => {
     this.setState({
       results: e.value[0],
+      end:e.value[0],
+      //data: data
     });
-	 Tts.getInitStatus().then(() => {
-	 Tts.speak(String(e.value[0]), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } });;
-   Tts.setDucking(true);
-   //Tts.addEventListener('tts-start', (event) => Tts.speak("taking you to " + String(this.state.x), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } }));
-	});
-	console.log(e.value[0])
-  }
-  
+    Tts.getInitStatus().then(() => {
+      Tts.speak("Taking you to " + String(e.value[0]), Tts.QUEUE_FLUSH, {
+        androidParams: {
+          KEY_PARAM_PAN: -1,
+          KEY_PARAM_VOLUME: 1,
+          KEY_PARAM_STREAM: "STREAM_ALARM"
+        }
+      });
 
-  splitTheWords=(val)=>
-  {
-    let arr=val.split(" ");
-    //alert(arr)
-    
- 
-  let keymap=new Map();
+      setTimeout(function() {
+        Tts.speak(String(data), Tts.QUEUE_FLUSH, null, null);
+      }, 5000);
+    });
+    console.log(e.value);
+    console.log(data);
+  }, 50);
+  //this.splitTheWords(e.value[0])
 
-
-for(let i=0;i<arr.length;i++)
-{
-  let key=arr[i];
-  if(arr[i]=="name"||arr[i]=="ID"||arr[i]=="mobile"||arr[i]=="sub-centre"||arr[i]=="subCentre")
-  {
-    keymap.set(arr[i],"");
-    let temp;
-    for(let j=i+1;j<arr.length;j++){
-      if(arr[j]=="name"||arr[j]=="ID"||arr[j]=="mobile"||arr[j]=="sub-centre"||arr[i]=="subCentre")
-      {
-
-        keymap.set(arr[i],temp)
-                   break;
-
-      }
-      else if(j==arr.length-1)
-      {        temp=temp+arr[j];
-
-        keymap.set(arr[i],temp)
-
-      }
-      else{
-        temp=temp+arr[j];
-
-      }
-
-      
-    }
-
-
-  }
-}
-
-let name=keymap.get("name")
-if(name)
-name=keymap.get("name").split("undefined")[1];
-
-let id=keymap.get("ID")
-if(id)
-id=keymap.get("ID").split("undefined")[1];
-
-let mobile=keymap.get("mobile")
-if(mobile)
-mobile=keymap.get("mobile").split("undefined")[1];
-
-let sc=keymap.get("subCentre") 
-if(sc)
-sc=keymap.get("subCentre").split("undefined")[1];
-
-
-alert(name+"     "+id+"   "+mobile+"    "+sc)
-
-
-
-
-
-}
-  
-  
+  //Tts.setDucking(true);
+  //Tts.addEventListener('tts-start', (event) => Tts.speak("taking you to " + String(this.state.x), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } }));
 
   async _startRecognition(e) {
-    console.log("start button pressed")
+    // Tts.speak(
+    //   "Please Say the destination after the beep. Thank you. where do u want to go"
+    // );
     this.setState({
-      recognized: '',
-      started: '',
+      recognized: "",
+      started: "",
       results: [],
-	    active: true,
+      active: true
     });
-    try {
-      await Voice.start('en-US');
-    } catch (e) {
-      console.error(e);
-    }
+
+    //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
+    // setTimeout(function() {
+      try {
+        Voice.start("en-US");
+      } catch (e) {
+        console.error(e);
+      }
+    // }, 5000);
   }
- 
-async  _stopRecognizing(e){
-  console.log("stop button pressed")
-	  this.setState({
-	  active: false,
+
+  //alert("start");
+
+  async _stopRecognizing(e) {
+    this.setState({
+      active: false
     });
-    try {
-      await Voice.stop();
-    } catch (e) {
-      //eslint-disable-next-line
-      console.error(e);
-    }
-  };
-  // testing=()=>{
-  //   Tts.speak("Hello")
-  // }
+    setTimeout(function() {
+      try {
+        Voice.stop();
+      } catch (e) {
+        //eslint-disable-next-line
+        console.error(e);
+      }
+    }, 5000);
+  }
 
+  render() {
+  if(this.state.end!=null)
+  alert(this.state.end)
 
-render () {
+    const shortest=<ShortestPath start={this.state.start} end={this.state.end}/>
+    const text=<Text></Text>
     return (
-      <View  style={styles.MainContainer}>
-  
-	<TouchableHighlight onPress={
- this.state.active ?  this._stopRecognizing.bind(this) : this._startRecognition.bind(this)
-
-}>
-
-	
-	<Image source={this.state.active ? pauseImage : playImage} />
-    </TouchableHighlight>
+      <View>
+         <TouchableHighlight
+        style={styles.container}
+        onPress={
+          this.state.active
+            ? this._stopRecognizing.bind(this)
+            : this._startRecognition.bind(this)
+        }
+      >
+        <Image
+          style={styles.imageStyle}
+          source={this.state.active ? pauseImage : playImage}
+        />
+      </TouchableHighlight>
+      <View>{this.state.start!=null && this.state.end!=null?shortest:text}</View>
       </View>
+     
     );
   }
 }
 const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    width: "100%",
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center"
+  },
 
   MainContainer: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems : 'center',
-
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   },
-  imageStyle : {
-	width: 100,
-    height: 100,
+  imageStyle: {
+    width: 480,
+    height: 480
   }
 });

@@ -1,9 +1,9 @@
 
-import { Component } from 'react';
-import {
+import React,{ Component } from 'react';
+import {View,
   PermissionsAndroid,
   Platform,
-  ToastAndroid
+  ToastAndroid,Text
 } from 'react-native';
 import  Geolocation  from 'react-native-geolocation-service';
 
@@ -14,7 +14,7 @@ export default class Location extends Component{
   constructor(props){
     super(props);
 
-    state = {
+    this.state = {
       forceLocation: true,
       highAccuracy: true,
       loading: false,
@@ -76,6 +76,7 @@ export default class Location extends Component{
         (position) => {
           console.log(position);
           this.setState({ location: position, loading: false });
+
         },
         (error) => {
           this.setState({ location: error, loading: false });
@@ -105,6 +106,7 @@ export default class Location extends Component{
         (position) => {
           this.setState({ location: position });
           console.log(position);
+
         },
         (error) => {
           this.setState({ location: error });
@@ -148,6 +150,13 @@ export default class Location extends Component{
 
 
   render(){
-    return(null);
-  }
+
+    return( <View>
+     <Text>{JSON.stringify(this.state.location)}</Text> 
+    </View>
+  );
+
+   
+}
+
 }

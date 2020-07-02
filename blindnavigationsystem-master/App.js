@@ -5,6 +5,7 @@ import VoiceNative from './Components/SpeechToText/SpeechToText'
 import Magneto  from './Components/Navigation/Magnetometer'
 import Location from './Components/Navigation/Geolocation'
 import GetButton from './Components/Database/database';
+import PathTracker from './Components/PathTracker/PathTracker'
 import PouchDB from 'pouchdb-react-native'
 
 import SQLite from 'react-native-sqlite-2'
@@ -32,8 +33,10 @@ export default class App extends Component {
                 x: {this.state.magnetometerData.x} y: {this.state.magnetometerData.y} z: {this.state.magnetometerData.z}
               </Text> */}
 
-              {/* <VoiceNative/> */}
-              <GetButton/>
+              <VoiceNative/>
+              {/* <GetButton/> */}
+              {/* <PathTracker/> */}
+              {/* <Location/> */}
 
 
 

@@ -3,6 +3,7 @@ package com.awesomeproject;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.pilloxa.backgroundjob.BackgroundJobPackage;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundJobPackage(),
             new RNSqlite2Package(),
             new RNFusedLocationPackage(),
             new ReanimatedPackage(),
