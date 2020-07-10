@@ -1,8 +1,7 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { debounce } from "lodash";
-import ShortestPath from "../../shortestpath"
-
+import ShortestPath from "../../shortestpath";
 
 import Tts from "react-native-tts";
 import {
@@ -21,7 +20,7 @@ import Voice from "react-native-voice";
 import playImage from "../../Assets/play.png";
 import pauseImage from "../../Assets/pause.png";
 
-import { data } from "./data";
+import data from "./data";
 
 export default class VoiceNative extends React.Component {
   constructor(props) {
@@ -30,12 +29,14 @@ export default class VoiceNative extends React.Component {
       recognized: "",
       started: "",
       results: [],
-      start:"S2",
-      end:"S1",
-
+      start: "S2",
+      endnode: null,
+      endDest: "",
+      dataSource: "",
       active: false,
       currentImage: "./play.png",
-      End: ""
+      End: "",
+      end: null
     };
 
     Voice.onSpeechStart = this.onSpeechStart.bind(this);
@@ -50,44 +51,46 @@ export default class VoiceNative extends React.Component {
 
   onSpeechStart = e => {
     this.setState({
-      started: "√"
+      started: "v",
+      dataSource: data.info
     });
   };
 
   onSpeechRecognized(e) {
     this.setState({
-      recognized: "√"
+      recognized: "v"
     });
   }
   onSpeechEnd(e) {
     this.setState({
-      End: "√",
+      End: "v",
       active: false
     });
   }
   onSpeechResults = debounce(e => {
+    this.splitTheWords(e.value[0]);
     this.setState({
-      results: e.value[0],
-      end:e.value[0],
-      //data: data
+      end: this.state.endnode
     });
-    Tts.getInitStatus().then(() => {
-      Tts.speak("Taking you to " + String(e.value[0]), Tts.QUEUE_FLUSH, {
-        androidParams: {
-          KEY_PARAM_PAN: -1,
-          KEY_PARAM_VOLUME: 1,
-          KEY_PARAM_STREAM: "STREAM_ALARM"
-        }
-      });
 
-      setTimeout(function() {
-        Tts.speak(String(data), Tts.QUEUE_FLUSH, null, null);
-      }, 5000);
-    });
-    console.log(e.value);
-    console.log(data);
+    // Tts.getInitStatus().then(() => {
+    //   if (this.state.endnode != null) {
+    //     Tts.speak(
+    //       "Taking you to " + String(this.state.endDest),
+    //       Tts.QUEUE_FLUSH,
+    //       {
+    //         androidParams: {
+    //           KEY_PARAM_PAN: -1,
+    //           KEY_PARAM_VOLUME: 1,
+    //           KEY_PARAM_STREAM: "STREAM_ALARM"
+    //         }
+    //       }
+    //     );
+    //   }
+    // });
+    // console.log(e.value);
+    //console.log(data);
   }, 50);
-  //this.splitTheWords(e.value[0])
 
   //Tts.setDucking(true);
   //Tts.addEventListener('tts-start', (event) => Tts.speak("taking you to " + String(this.state.x), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } }));
@@ -105,11 +108,11 @@ export default class VoiceNative extends React.Component {
 
     //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
     // setTimeout(function() {
-      try {
-        Voice.start("en-US");
-      } catch (e) {
-        console.error(e);
-      }
+    try {
+      Voice.start("en-US");
+    } catch (e) {
+      console.error(e);
+    }
     // }, 5000);
   }
 
@@ -129,30 +132,59 @@ export default class VoiceNative extends React.Component {
     }, 5000);
   }
 
-  render() {
-  if(this.state.end!=null)
-  alert(this.state.end)
+  splitTheWords = val => {
+    let arr = val.split(" ");
+    console.log(arr);
+    let count = true;
 
-    const shortest=<ShortestPath start={this.state.start} end={this.state.end}/>
-    const text=<Text></Text>
+    for (let j = 0; j < this.state.dataSource.length && count == true; j++) {
+      for (let i = 0; i < arr.length; i++) {
+        if (this.state.dataSource[j].destination == arr[i]) {
+          this.state.endnode = this.state.dataSource[j].node;
+          
+          this.state.endDest = this.state.dataSource[j].destination;
+          count = false;
+        }
+      }
+    }
+    if (count == true) {
+      this.state.endnode = null;
+      this.state.endDest = Tts.speak(
+        "This destination does not exist in the building"
+      );
+      console.log(this.state.endnode);
+    }
+    //alert(this.state.endnode);
+    console.log(this.state.endnode);
+  };
+
+  render() {
+    // if (this.state.endnode != null) alert(this.state.endnode);
+    // console.log(this.state.end);
+
+    const shortest = (
+      <ShortestPath start={this.state.start} end={this.state.end} />
+    );
+    const text = <Text></Text>;
     return (
       <View>
-         <TouchableHighlight
-        style={styles.container}
-        onPress={
-          this.state.active
-            ? this._stopRecognizing.bind(this)
-            : this._startRecognition.bind(this)
-        }
-      >
-        <Image
-          style={styles.imageStyle}
-          source={this.state.active ? pauseImage : playImage}
-        />
-      </TouchableHighlight>
-      <View>{this.state.start!=null && this.state.end!=null?shortest:text}</View>
+        <TouchableHighlight
+          style={styles.container}
+          onPress={
+            this.state.active
+              ? this._stopRecognizing.bind(this)
+              : this._startRecognition.bind(this)
+          }
+        >
+          <Image
+            style={styles.imageStyle}
+            source={this.state.active ? pauseImage : playImage}
+          />
+        </TouchableHighlight>
+        <View>
+          {this.state.start != null && this.state.end != null ? shortest : text}
+        </View>
       </View>
-     
     );
   }
 }

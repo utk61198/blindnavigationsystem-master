@@ -1,0 +1,16 @@
+{
+  "info": [
+    {
+      "destination": "cafeteria",
+      "node": "M2"
+    },
+    {
+      "destination": "lobby",
+      "node": "S1"
+    },
+    {
+      "destination": "conference",
+      "node": "C2"
+    }
+  ]
+}

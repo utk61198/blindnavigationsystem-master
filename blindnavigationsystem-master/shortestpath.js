@@ -6,6 +6,9 @@
  * @flow strict-local
  */
 
+import { Pedometer } from "expo-sensors";
+
+
 import React, { Component, useState } from 'react';
 import {
   SafeAreaView,
@@ -15,10 +18,15 @@ import {
   Text,
   StatusBar,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 
+
 import Graph from './graph';
+import Tts from 'react-native-tts'
+import Toast from 'react-native-simple-toast';
+
 
 import {
   Header,
@@ -201,13 +209,18 @@ export default class ShortestPath extends Component {
   }
 
   
-  componentDidMount(){
- this.updatePath()
+componentDidMount(){
+this.updatePath()
 
 
 
   }
 
+
+  // componentDidUpdate(){
+
+  //   this.updatePath()
+  // }
 
 
   
@@ -247,7 +260,7 @@ export default class ShortestPath extends Component {
                 map.addEdge(`${up}`, `${(current)}`, 1);
               }
               if (floorPlan[i - 1][j + 1] == 1) {
-                map.addEdge(`${upNext}`, `${(current)}`, 1.5)
+                map.addEdge(`${upNext}`, `${(current)}`, 20)
               }
             }
             else {
@@ -255,13 +268,13 @@ export default class ShortestPath extends Component {
                 map.addEdge(`${Previous}`, `${(current)}`, 1)
               }
               if (floorPlan[i - 1][j - 1] == 1) {
-                map.addEdge(`${upPrevious}`, `${(current)}`, 1.5)
+                map.addEdge(`${upPrevious}`, `${(current)}`, 20)
               }
               if (floorPlan[i - 1][j] == 1) {
                 map.addEdge(`${up}`, `${(current)}`, 1);
               }
               if (floorPlan[i - 1][j + 1] == 1) {
-                map.addEdge(`${upNext}`, `${(current)}`, 1.5)
+                map.addEdge(`${upNext}`, `${(current)}`, 20)
               }
             }
           }
@@ -315,11 +328,16 @@ export default class ShortestPath extends Component {
           if (direction[j]==direction[j+1]){
             steps ++;
           }else{
-            temp.push(<Text style={styles.inditext}>{direction[j] + ` ${steps} Step(s) `}</Text>);
+           steps=steps*5
+            const val={
+              direction:direction[j] + ` ${steps} Step(s) `,
+              stepcount:steps
+            }
+            temp.push(val);
             steps =1;
           }  
       
-        // console.log (temp);
+        //console.log (temp);
       }
 
       // for (var j = 0; j < direction.length; j++) {
@@ -380,15 +398,234 @@ export default class ShortestPath extends Component {
 
       // console.log(path);
       console.log(temp)
-      this.setState({ path: temp });
+      // var Path=temp.split(" ");
+      
+ 
+      //   setTimeout(function() {
+      //   Tts.speak(String(data), Tts.QUEUE_FLUSH, null, null);
+      // }, 5000);
+
+      let str=""
+      for(i=0;i<temp.length;i++)
+      {
+ 
+
+        str=str+temp[i].direction+"\n"
+
+      }
+
+     //alert(str)
+      
+Tts.setDefaultRate(0.4);
+let sleep_val=0;
+
+let step_c=0;
+
+
+
+// const doSomething = async () => {
+//   for(i=0;i<=temp.length;i++) {
+//     await sleep(sleep_val)
+//     if(i<temp.length)
+//     {if(temp[i].stepcount>=10)
+//       sleep_val=temp[i].stepcount*700
+//       else
+//     sleep_val=temp[i].stepcount*1500
+//     }
+//     if(i==temp.length)
+//         {
+          
+
+//           Tts.speak("You have reached your destination", {
+//             androidParams: {
+//               KEY_PARAM_PAN: 1,
+             
+//             },
+//           });
+
+//           Toast.show("You have reached your destination")
+          
+
+          
+//         }
+//         else
+//         {
+         
+
+//               console.log(temp[i])
+          
+//           Tts.speak(temp[i].direction, {
+//           androidParams: {
+//             KEY_PARAM_PAN: 1,
+            
+//           },
+//         });
+//         Toast.show(temp[i].direction)
+        
+        
+        
+
+
+        
+
+
+
+
+
+      
+      
+//       }
+       
+//   }
+// }
+// doSomething()
+
+
+
+let count=0;
+let flag=1;
+Pedometer.watchStepCount(result => {
+  step_c=result.steps
+
+  if(count==0 && flag==1)
+  {
+
+    flag=0;
+        Tts.speak(temp[count].direction, {
+    androidParams: {
+      KEY_PARAM_PAN: 1,
+      
+    },
+  });
+  Toast.show(temp[count].direction)
+  step_track=temp[count].stepcount
+
+
+
+
+  }
+  
+  else if(step_c-step_track>0)
+  {
+
+  
+
+   
+    
+    count++;
+    if(count<temp.length)
+    {
+
+     
+    
+
+
+      step_track=step_track+temp[count].stepcount
+
+        console.log(temp[count])
+  Tts.speak(temp[count].direction, {
+        androidParams: {
+          KEY_PARAM_PAN: 1,
+          
+        },
+      });
+
+
+      Toast.show(temp[count].direction)
+
+   
+
+
+
     }
-    // console.log (newpath);
-    // if ((this.state.startNode != null) && (this.state.endNode != null)) {
-    //   newpath = Graph.map.findPathWithDijkstra(`${this.state.startNode}`,`${this.state.endNode}`);
-    //   this.setState({path: newpath});
-    //   // console.log (newpath);
-    // }
+    else if(count==temp.length)
+    {
+    
+      Tts.speak("You have reached your destination", {
+        androidParams: {
+          KEY_PARAM_PAN: 1,
+          
+        },
+      });
+      Toast.show("You have reached your destination")
+
+
+
+
+
+  }
+  }
+
+
+
+
+
+});
+
+
+// for(let i=0;i<=temp.length;i++)
+// { 
+  
+// let start=new Date();
+// if(i==temp.length)
+// {
+
+
+//   Tts.speak("You have reached your destination", {
+//     androidParams: {
+//       KEY_PARAM_PAN: 1,
+      
+//     },
+//   });
+//   Toast.show("You have reached yout destination")
+
+
+
+// }
+
+
+
+// else {
+
+// let end=new Date()
+// alert(end)
+// let x=Pedometer.getStepCountAsync(start,end).steps
+// while(x-temp[i].stepcount<0)
+// {
+
+//   end=new Date();
+//   x=Pedometer.getStepCountAsync(start,end).steps;
+
+// }
+// Tts.speak(temp[i].direction, {
+//   androidParams: {
+//     KEY_PARAM_PAN: 1,
+    
+//   },
+// });
+
+// Toast.show(temp[i].direction)
+
+
+
+
+
+
+
+
+
+// }
+
+
+
+// }
+
+
+
+
+
   };
+}
 
   handleStart = (text) => {
     if (text=="W1"){
@@ -456,6 +693,8 @@ export default class ShortestPath extends Component {
 
     this.setState({ startNode: text })
   }
+
+
   handleEnd = (text) => {
     if (text=="W1"){
       text = 242;
@@ -560,8 +799,12 @@ export default class ShortestPath extends Component {
 
   }
 
+}
 
-};
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 const styles = StyleSheet.create({
   container: {

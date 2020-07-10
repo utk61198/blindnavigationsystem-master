@@ -5,6 +5,8 @@ import { GetInfraData } from './InfraData'
 import { watchPosition } from 'react-native-geolocation-service';
 import BackgroundJob from 'react-native-background-job'
 import {View,Text} from 'react-native'
+import { Barometer } from 'expo-sensors';
+
 
 
 // const backgroundJob={
@@ -32,9 +34,11 @@ export default class PathTracker extends Component{
           currentStepCount: 0,
           magnetometer: {},
           heading :"",
+          pressure_value:""
           
           
         };
+
 
         let infraData ='';
         this.checkpath=this.checkpath.bind(this)
@@ -47,25 +51,55 @@ export default class PathTracker extends Component{
 
     componentDidMount()
     {  
-     
+     console.log("inside")
        this.subscribeToPedometer();
+       this.subscribeToBarometer();
+
+
         
         //this.subscribeToMagnetometer();
 
         let infraDataJson = GetInfraData();
 
         this.infraData = JSON.parse(infraDataJson);
-        this.checkpath();
+
+        //this.checkpath();
 
 
 
         
     }
 
+
+    trackSteps(){
+
+       let i;
+       for(i=0;i<this.infraData.Route.length;i++)
+       {
+
+        var obj=this.infraData.Route[i];
+        let j=0;
+        
+
+
+
+       }
+
+
+
+
+
+
+
+
+
+    }
+
     componentWillUnmount()
     {
         this.unsubscribeToPedometer();
         this.unsubscribeToMagnetometer();
+        //this.unsubscribeToBarometer();
     }
 
 
@@ -120,32 +154,32 @@ let count=0;
 
 
 
-        // while(count<=10)
-        // {
+        while(count<=10)
+        {
 
  
 
 
 
 
-        //     if(!obj.Direction==this.state.heading)
-        //     {
-        //         console.log("You are not in the right direction!!: " + this.state.heading);
+            if(!obj.Direction==this.state.heading)
+            {
+                console.log("You are not in the right direction!!: " + this.state.heading);
 
-        //     }
-        //     else if(j==obj.Steps && this.state.heading==obj.Direction){
-        //       console.log("Reached : " + this.state.heading);
-        //       break;
-        //     }
-        //     else if(obj.Direction==this.state.heading)
-        //     {
-        //       console.log("You are in the right direction: "+this.state.heading)
-        //     j++;
+            }
+            else if(j==obj.Steps && this.state.heading==obj.Direction){
+              console.log("Reached : " + this.state.heading);
+              break;
+            }
+            else if(obj.Direction==this.state.heading)
+            {
+              console.log("You are in the right direction: "+this.state.heading)
+            j++;
            
-        //     }
-        //     count++;
+            }
+            count++;
 
-        // }
+        }
         j=0;
 
         
@@ -234,6 +268,34 @@ let count=0;
 
     }; 
 
+
+    subscribeToBarometer=()=>{
+      console.log("inside baro")
+
+
+      this._subscriptionBarometer = Barometer.addListener(barometerData => {
+        console.log("hello")
+        this.setState({
+          pressure_value:barometerData
+        })
+      });
+
+
+
+    }
+
+
+    unsubscribeToBarometer=()=>{
+
+      this.barometerSubscribe && this.barometerSubscribe.remove();
+      this.barometerSubscribe = null;
+
+
+
+
+
+    }
+
     calculateHeading(magnetometerX,magnetometerY)
     {
         let x_rad = magnetometerX * (Math.PI/180);
@@ -279,7 +341,7 @@ let count=0;
 
     render() 
       {
-      return(<View><Text>{this.state.heading}</Text></View>)
+      return(<View><Text>{this.state.pressure_value}</Text></View>)
       }
 
     }
