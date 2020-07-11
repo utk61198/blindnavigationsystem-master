@@ -2,6 +2,8 @@ import "react-native-gesture-handler";
 import React from "react";
 import { debounce } from "lodash";
 import ShortestPath from "../../shortestpath";
+import Toast from 'react-native-simple-toast';
+
 
 import Tts from "react-native-tts";
 import {
@@ -96,9 +98,9 @@ export default class VoiceNative extends React.Component {
   //Tts.addEventListener('tts-start', (event) => Tts.speak("taking you to " + String(this.state.x), { androidParams: { KEY_PARAM_PAN: -1, KEY_PARAM_VOLUME: 1, KEY_PARAM_STREAM: 'STREAM_ALARM' } }));
 
   async _startRecognition(e) {
-    // Tts.speak(
-    //   "Please Say the destination after the beep. Thank you. where do u want to go"
-    // );
+    Tts.speak(
+      "Please Say the destination after the beep."
+    );
     this.setState({
       recognized: "",
       started: "",
@@ -108,15 +110,21 @@ export default class VoiceNative extends React.Component {
 
     //Put All Your Code Here, Which You Want To Execute After Some Delay Time.
     // setTimeout(function() {
-    try {
-      Voice.start("en-US");
-    } catch (e) {
-      console.error(e);
-    }
+      sleep(3000).then(() => {
+        try {
+          Voice.start("en-US");
+        } catch (e) {
+          console.error(e);
+        }
+        //// code
+        })
+
+ 
     // }, 5000);
   }
 
   //alert("start");
+
 
   async _stopRecognizing(e) {
     this.setState({
@@ -131,6 +139,9 @@ export default class VoiceNative extends React.Component {
       }
     }, 5000);
   }
+
+
+  
 
   splitTheWords = val => {
     let arr = val.split(" ");
@@ -152,7 +163,7 @@ export default class VoiceNative extends React.Component {
       this.state.endDest = Tts.speak(
         "This destination does not exist in the building"
       );
-      console.log(this.state.endnode);
+      Toast.show("This destination does not exist in the building")
     }
     //alert(this.state.endnode);
     console.log(this.state.endnode);
@@ -187,6 +198,10 @@ export default class VoiceNative extends React.Component {
       </View>
     );
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 const styles = StyleSheet.create({
   container: {
