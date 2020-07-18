@@ -162,6 +162,7 @@ export default class VoiceNative extends React.Component {
       this.state.endnode = null;
       this.state.endDest = Tts.speak(
         "This destination does not exist in the building"
+        
       );
       Toast.show("This destination does not exist in the building")
     }
@@ -185,7 +186,7 @@ export default class VoiceNative extends React.Component {
             this.state.active
               ? this._stopRecognizing.bind(this)
               : this._startRecognition.bind(this)
-          }
+          } 
         >
           <Image
             style={styles.imageStyle}

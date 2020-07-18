@@ -326,6 +326,7 @@ let count=0;
           return 'W';
         }
         else if (degree >= 292.5 && degree < 337.5) {
+        
           return 'NW';
         }
         else {

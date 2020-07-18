@@ -288,7 +288,8 @@ this.updatePath()
       let i;
       for (i = 0; i < newpath.length - 1; i++) {
         if (newpath[i + 1] - newpath[i] == 20) {
-          direction.push("Move Forward");
+          direction.push("Move Left");
+          //Forward changed to left
         }
         else if (newpath[i + 1] - newpath[i] == 21) {
           direction.push("Move Left Diagonal");
@@ -303,7 +304,8 @@ this.updatePath()
           direction.push("Move Right");
         }
         else if (newpath[i] - newpath[i + 1] == 20) {
-          direction.push("Move Backward");
+          direction.push("Move Right");
+          //Backward Changed to right
         }
         else if (newpath[i] - newpath[i + 1] == 21) {
           direction.push("Move Backward Diagonally Right");
@@ -339,6 +341,24 @@ this.updatePath()
       
         //console.log (temp);
       }
+
+
+      let temp2=[];
+      const val1={
+        direction:"Move Left 5 Step(s)",
+        stepcount:5
+      }
+      const val2={
+        direction:"Move Right 5 Step(s)",
+        stepcount:5
+      } 
+      const val3={
+        direction:"Move Left 10 Step(s)",
+        stepcount:10
+      }
+      temp2.push(val1);
+      temp2.push(val2);
+      temp2.push(val3);
 
       // for (var j = 0; j < direction.length; j++) {
       //   var steps = 0;
@@ -397,7 +417,7 @@ this.updatePath()
       // console.log(newdir);
 
       // console.log(path);
-      console.log(temp)
+     
       // var Path=temp.split(" ");
       
  
@@ -491,14 +511,14 @@ Pedometer.watchStepCount(result => {
   {
 
     flag=0;
-        Tts.speak(temp[count].direction, {
+        Tts.speak(temp2[count].direction, {
     androidParams: {
       KEY_PARAM_PAN: 1,
       
     },
   });
-  Toast.show(temp[count].direction)
-  step_track=temp[count].stepcount
+  Toast.show(temp2[count].direction)
+  step_track=temp2[count].stepcount
 
 
 
@@ -513,17 +533,17 @@ Pedometer.watchStepCount(result => {
    
     
     count++;
-    if(count<temp.length)
+    if(count<temp2.length)
     {
 
      
     
 
 
-      step_track=step_track+temp[count].stepcount
+      step_track=step_track+temp2[count].stepcount
 
-        console.log(temp[count])
-  Tts.speak(temp[count].direction, {
+        
+  Tts.speak(temp2[count].direction, {
         androidParams: {
           KEY_PARAM_PAN: 1,
           
@@ -531,14 +551,14 @@ Pedometer.watchStepCount(result => {
       });
 
 
-      Toast.show(temp[count].direction)
+      Toast.show(temp2[count].direction)
 
    
 
 
 
     }
-    else if(count==temp.length)
+    else if(count==temp2.length)
     {
     
       Tts.speak("You have reached your destination", {
