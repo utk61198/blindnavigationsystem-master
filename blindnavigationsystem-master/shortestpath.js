@@ -288,8 +288,10 @@ this.updatePath()
       let i;
       for (i = 0; i < newpath.length - 1; i++) {
         if (newpath[i + 1] - newpath[i] == 20) {
-          direction.push("Move Left");
+          
+          direction.push("Move Right");
           //Forward changed to left
+          
         }
         else if (newpath[i + 1] - newpath[i] == 21) {
           direction.push("Move Left Diagonal");
@@ -304,16 +306,19 @@ this.updatePath()
           direction.push("Move Right");
         }
         else if (newpath[i] - newpath[i + 1] == 20) {
-          direction.push("Move Right");
+          direction.push("Move Left");
           //Backward Changed to right
         }
         else if (newpath[i] - newpath[i + 1] == 21) {
           direction.push("Move Backward Diagonally Right");
+          
         }
+        
         else if (newpath[i] - newpath[i + 1] == 19) {
           direction.push("Move Backward Diagonally Left");
         }
         else if (newpath[i] - newpath[i + 1] == 1) {
+          
           direction.push("Move Right ");
         }
         else if (newpath[i] - newpath[i + 1] == -1) {
@@ -511,14 +516,14 @@ Pedometer.watchStepCount(result => {
   {
 
     flag=0;
-        Tts.speak(temp2[count].direction, {
+        Tts.speak(temp[count].direction, {
     androidParams: {
       KEY_PARAM_PAN: 1,
       
     },
   });
-  Toast.show(temp2[count].direction)
-  step_track=temp2[count].stepcount
+  Toast.show(temp[count].direction)
+  step_track=temp[count].stepcount
 
 
 
@@ -533,17 +538,17 @@ Pedometer.watchStepCount(result => {
    
     
     count++;
-    if(count<temp2.length)
+    if(count<temp.length)
     {
 
      
     
 
 
-      step_track=step_track+temp2[count].stepcount
+      step_track=step_track+temp[count].stepcount
 
         
-  Tts.speak(temp2[count].direction, {
+  Tts.speak(temp[count].direction, {
         androidParams: {
           KEY_PARAM_PAN: 1,
           
@@ -551,14 +556,14 @@ Pedometer.watchStepCount(result => {
       });
 
 
-      Toast.show(temp2[count].direction)
+      Toast.show(temp[count].direction)
 
    
 
 
 
     }
-    else if(count==temp2.length)
+    else if(count==temp.length)
     {
     
       Tts.speak("You have reached your destination", {
