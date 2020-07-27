@@ -11,7 +11,7 @@
     "@react-native-community/masked-view": "^0.1.6",
     "expo": "~36.0.0",
     "expo-sensors": "^9.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "pouchdb": "^7.2.1",
     "pouchdb-adapter-react-native-sqlite": "^2.0.0",
     "pouchdb-react-native": "^6.4.1",
