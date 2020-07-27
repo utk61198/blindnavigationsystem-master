@@ -136,7 +136,7 @@ return heading;
       for(i = 0; i<this.infraData.Route.length; i++)
       {   
         var obj  = this.infraData.Route[i]; 
-    
+        var mid = obj.Steps/2;
         if(!obj.Direction==this.state.heading)
         {
             console.log("You are in the wrong direction!!");
@@ -165,6 +165,14 @@ let count=0;
             if(!obj.Direction==this.state.heading)
             {
                 console.log("You are not in the right direction!!: " + this.state.heading);
+                if(j<mid){
+                    i--;
+                    break;
+                }
+                else{
+                  //do nothing
+                  //move to the next node.
+                }
 
             }
             else if(j==obj.Steps && this.state.heading==obj.Direction){
