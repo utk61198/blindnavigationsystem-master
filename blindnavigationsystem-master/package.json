@@ -17,7 +17,7 @@
     "pouchdb-react-native": "^6.4.1",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
-    "react-native": "~0.61.4",
+    "react-native": "~0.62.3",
     "react-native-background-job": "^2.3.1",
     "react-native-geolocation-service": "^5.0.0",
     "react-native-gesture-handler": "^1.6.0",
